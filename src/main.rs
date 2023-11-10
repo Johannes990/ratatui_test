@@ -21,7 +21,25 @@ fn main() -> Result<()> {
 
     loop {
         // TODO draw
+        terminal.draw(|frame| {
+            let area = frame.size();
+            frame.render_widget(
+                Paragraph::new("Hello Ratatui! (press 'q' or 'Q' to quit)")
+                    .white()
+                    .on_blue(),
+                area,
+            );
+        })?;
+
         // TODO handle events
+        if event::poll(std::time::Duration::from_millis(16))? {
+            if let event::Event::Key(key) = event::read()? {
+                if key.kind == KeyEventKind::Press && (key.code == KeyCode::Char('q')
+                        || key.code == KeyCode::Char('Q')) {
+                    break;
+                }
+            }
+        }
     }
 
     stdout().execute(LeaveAlternateScreen)?;
